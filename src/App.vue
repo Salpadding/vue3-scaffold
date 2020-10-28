@@ -1,11 +1,11 @@
 <template>
   <div>
     <h1>{{ title }}</h1>
-    <img src="@/assets/img/favicon.ico" />
+    <img src="@/assets/img/favicon.ico"  alt="favicon"/>
   </div>
 </template>
 <script lang="ts">
-import { defineComponent } from "vue";
+import { defineComponent } from "vue"
 
 export default defineComponent({
   name: "App",
@@ -16,7 +16,7 @@ export default defineComponent({
   },
   setup(){
     return {
-      title: '标题'
+      title: '标题2'
     }
   },
   // 组件方法也可以直接声明为实例的方法
