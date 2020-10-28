@@ -59,7 +59,7 @@ module.exports = {
         compress: true,
         port: 9988
     },
-    plugins: [new HtmlWebpackPlugin(), new VueLoader.VueLoaderPlugin()],
+    plugins: [new VueLoader.VueLoaderPlugin()],
     externals: {
         'vue': 'Vue'
     }
