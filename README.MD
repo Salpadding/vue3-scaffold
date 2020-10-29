@@ -2,10 +2,14 @@
 
 基于 webpack 配置的 vue3 的脚手
 
+```sh
 npm insatll
+```
 
-
+```sh
 webpack
+```
 
-
+```sh
 cp index.html dist
+```
