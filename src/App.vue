@@ -11,7 +11,7 @@ import { Vue, Options} from "vue-class-component"
   name: 'App'
 })
 export default class App extends Vue{
-  title: '标题2'
+  title = '标题2'
 
   // 组件方法也可以直接声明为实例的方法
   onClick(): void {

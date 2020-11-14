@@ -1,11 +1,12 @@
 const path = require('path')
 const VueLoader = require('vue-loader')
-const HtmlWebpackPlugin = require('html-webpack-plugin');
+const webpack = require('webpack')
+const HtmlWebpackPlugin = require('html-webpack-plugin')
 
-module.exports = {
+module.exports = (env = {}) => ({
     entry: path.join(__dirname, './src/main.ts'),
-    mode: 'development',
-    devtool: 'inline-source-map',
+    mode: env.prod ? 'production' : 'development',
+    devtool: env.prod ? 'source-map' : 'inline-source-map',
     module: {
         rules: [
             {
@@ -17,7 +18,7 @@ module.exports = {
                 test: /\.ts?$/,
                 loader: 'ts-loader',
                 exclude: /node_modules/,
-                options: { appendTsSuffixTo: [/\.vue$/] }
+                options: { appendTsSuffixTo: [/\.vue$/], transpileOnly: true /* 跳过typescript类型检查 加快打包速度 */}
             },
             {
                 test: /\.vue$/,
@@ -26,7 +27,7 @@ module.exports = {
             {
                 test: /\.css$/,
                 use: [
-                    'vue-style-loader',
+                    'style-loader',
                     'css-loader'
                 ]
             },
@@ -42,22 +43,69 @@ module.exports = {
                     },
                 ],
             },
+            {
+                test: /\.less$/,
+                use: [
+                    'style-loader',
+                    'css-loader',
+                    'less-loader'
+                ]
+            },
+            {
+                test: /\.ejs$/i,
+                use: 'raw-loader',
+            },    
+            // sass config
+            /*
+            {
+                test: /\.s[ac]ss$/i,
+                use: [
+                  // Creates `style` nodes from JS strings
+                  'style-loader',
+                  // Translates CSS into CommonJS
+                  'css-loader',
+                  // Compiles Sass to CSS
+                  'sass-loader',
+                ],
+            }, 
+            */                   
         ]
     },
     resolve: {
         extensions: ['.tsx', '.ts', '.js', '.vue'],
         alias: {
             '@': path.join(__dirname, 'src')
-        }
+        }   
     },
     output: {
         path: path.join(__dirname, 'dist'),
-        filename: 'main.js',
+        filename: 'bundle.js',
     },
     devServer: {
+        inline: true,
+        hot: true,
         contentBase: path.join(__dirname, 'dist'),
         compress: true,
         port: 9988
     },
-    plugins: [new VueLoader.VueLoaderPlugin()]
-}
+    plugins: [
+        new VueLoader.VueLoaderPlugin(),
+        new webpack.DefinePlugin({
+            __VUE_OPTIONS_API__: 'true',
+            __VUE_PROD_DEVTOOLS__: 'false'
+        }),
+        new HtmlWebpackPlugin({
+            filename: 'index.html', 
+            template: path.join(__dirname, 'index.html'), //本地自定义模板
+            inject: true
+       })        
+    ],
+    // externals: {
+    //     vue: 'Vue',
+    //     'ant-design-vue': 'antd',
+    //     'vue-router': 'VueRouter'
+    // },
+    watchOptions: {
+        ignored: /node_modules/
+    }
+})
